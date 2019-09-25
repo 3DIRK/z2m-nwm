@@ -10,6 +10,6 @@ script:
  - echo "skipping tests"
  
 deploy:
-  - script:
+  - provider: script
+    - script:
       - docker build -t 3DiRK/z2m-nwm .
-
