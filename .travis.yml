@@ -9,5 +9,7 @@ services:
 script:
  - echo "skipping tests"
  
-before_deploy:
-    - docker build -t 3DiRK/z2m-nwm .
+deploy:
+  - script:
+      - docker build -t 3DiRK/z2m-nwm .
+
