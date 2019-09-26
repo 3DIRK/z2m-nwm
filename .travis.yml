@@ -10,6 +10,7 @@ script:
  - echo "skipping tests"
  
 before_deploy:
+    - docker run --rm --privileged multiarch/qemu-user-static:register
     - docker build -t 3dirk/z2m-nwm .
     
 deploy:
