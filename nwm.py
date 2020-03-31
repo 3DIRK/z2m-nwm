@@ -52,7 +52,7 @@ def networkmap():
 
 @route("/routes")
 def networkroutes():
-    topic = "zigbee2mqtt/bridge/networkmap/routes"
+    topic = "".join([get_parameters()["ROOT_TOPIC"], "/bridge/networkmap/routes"])
     response.content_type = "image/svg+xml; charset=utf-8"
     nwm = create_map(topic)
     return nwm
