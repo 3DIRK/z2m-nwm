@@ -13,7 +13,7 @@ from bottle import route, run, template, response, request
 def get_parameters():
     parameter_dict = {}
     mand_params = ["USERNAME", "PASSWORD", "HOSTNAME"]
-    opt_params = {"PORT": 1883, "LISTEN": 80}
+    opt_params = {"PORT": 1883, "LISTEN": 80, "ROOT_TOPIC": "zigbee2mqtt"}
 
     for item in mand_params:
         try:
@@ -37,14 +37,15 @@ def create_map(topic):
     paras = get_parameters()
     cred = {'username': paras["USERNAME"], 'password': paras["PASSWORD"]}
     publish.single(topic=topic, payload="graphviz", hostname=paras["HOSTNAME"], auth=cred)
-    message = subscribe.simple("zigbee2mqtt/bridge/networkmap/graphviz", hostname=paras["HOSTNAME"], auth=cred)
+    topic_subscribe = "".join([get_parameters()["ROOT_TOPIC"], "/bridge/networkmap/graphviz"])
+    message = subscribe.simple(topic_subscribe, hostname=paras["HOSTNAME"], auth=cred)
     network_map = graphviz.Source(message.payload.decode("utf-8"), engine="circo")
     nwm = (network_map.pipe(format="svg", renderer="cairo", formatter="cairo")).decode("utf-8")
     return nwm
 
 @route("/")
 def networkmap():
-    topic = "zigbee2mqtt/bridge/networkmap"
+    topic = "".join([get_parameters()["ROOT_TOPIC"], "/bridge/networkmap"])
     response.content_type = "image/svg+xml; charset=utf-8"
     nwm = create_map(topic)
     return nwm
